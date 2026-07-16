@@ -1,0 +1,38 @@
+<%- include('partials/public-navbar') %>
+
+<div class="section-block bg-alt">
+  <div class="section-inner">
+    <h2 style="margin-bottom: 2rem; text-align: center;">Promo & Penawaran Spesial</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+      <% promos.forEach(promo => { %>
+        <div style="background: #fff; border-radius: 1rem; padding: 2rem; box-shadow: 0 4px 12px rgba(20,20,50,0.08);">
+          <div style="background: linear-gradient(135deg, var(--primary), #8a5bff); color: #fff; padding: 1.5rem; border-radius: .8rem; margin-bottom: 1.5rem; text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: 800;"><%= promo.discount %></div>
+            <small>Diskon Khusus</small>
+          </div>
+          
+          <h5 style="margin-bottom: .5rem;"><%= promo.title %></h5>
+          <p style="color: var(--text-muted); font-size: .9rem; margin-bottom: 1rem; line-height: 1.5;"><%= promo.description %></p>
+          
+          <div style="padding: 1rem; background: var(--bg); border-radius: .6rem; text-align: center;">
+            <small style="color: var(--text-muted);">Berlaku hingga</small>
+            <div style="font-weight: 700; color: var(--primary);"><%= new Date(promo.validUntil).toLocaleDateString('id-ID') %></div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+
+    <div style="background: #fff; border-radius: 1rem; padding: 2rem; margin-top: 2rem; text-align: center;">
+      <h4 style="margin-bottom: 1rem;">Syarat & Ketentuan Promo</h4>
+      <ul style="color: var(--text-muted); display: inline-block; text-align: left;">
+        <li>Promo berlaku untuk user yang sudah terverifikasi</li>
+        <li>Setiap promo hanya dapat digunakan satu kali</li>
+        <li>Diskon otomatis diterapkan saat checkout</li>
+        <li>Promo tidak dapat digabungkan dengan promo lain</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/public-footer') %>

@@ -1,0 +1,47 @@
+<%- include('partials/public-navbar') %>
+
+<div class="section-block">
+  <div class="section-inner narrow">
+    <h2 style="text-align: center; margin-bottom: 1.5rem;">Bantuan & Support</h2>
+
+    <% if (error) { %>
+      <div class="alert alert-danger" style="margin-bottom: 1.5rem;"><%= error %></div>
+    <% } %>
+    <% if (success) { %>
+      <div class="alert alert-success" style="margin-bottom: 1.5rem;"><%= success %></div>
+    <% } %>
+
+    <div style="background: #fff; border-radius: 1rem; padding: 1.5rem; margin-bottom: 2rem;">
+      <h4 style="margin-bottom: 1rem;">Hubungi Kami</h4>
+      <form method="POST" action="/bantuan/kirim">
+        <div style="margin-bottom: 1.2rem;">
+          <label style="display: block; margin-bottom: .4rem; font-weight: 700;">Subject</label>
+          <input type="text" name="subject" placeholder="Topik bantuan Anda" class="form-control" required>
+        </div>
+        <div style="margin-bottom: 1.2rem;">
+          <label style="display: block; margin-bottom: .4rem; font-weight: 700;">Pesan</label>
+          <textarea name="message" rows="5" placeholder="Jelaskan masalah Anda" class="form-control" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Kirim Pesan</button>
+      </form>
+    </div>
+
+    <h4 style="margin-bottom: 1rem; margin-top: 2rem;">FAQ</h4>
+    <div style="background: #fff; border-radius: 1rem; overflow: hidden;">
+      <details style="padding: 1.5rem; border-bottom: 1px solid var(--border);" open>
+        <summary style="cursor: pointer; font-weight: 700; color: var(--primary);">Bagaimana cara membeli nokos?</summary>
+        <p style="margin: 1rem 0 0; color: var(--text-muted);">1. Daftar dan verifikasi email. 2. Topup saldo Anda. 3. Pilih nokos di katalog. 4. Lakukan checkout. 5. Tunggu saldo dikurangi setelah verifikasi admin.</p>
+      </details>
+      <details style="padding: 1.5rem; border-bottom: 1px solid var(--border);">
+        <summary style="cursor: pointer; font-weight: 700; color: var(--primary);">Berapa lama proses topup?</summary>
+        <p style="margin: 1rem 0 0; color: var(--text-muted);">Proses topup biasanya memakan waktu 10-30 menit setelah Anda mengkonfirmasi pembayaran. Admin akan memverifikasi dan menambahkan saldo ke akun Anda.</p>
+      </details>
+      <details style="padding: 1.5rem;">
+        <summary style="cursor: pointer; font-weight: 700; color: var(--primary);">Apakah nomor yang dijual original?</summary>
+        <p style="margin: 1rem 0 0; color: var(--text-muted);">Ya, semua nomor virtual yang kami jual adalah asli dan aktif. Setiap nomor telah diverifikasi dan dapat menerima SMS OTP.</p>
+      </details>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/public-footer') %>

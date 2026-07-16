@@ -1,0 +1,68 @@
+<%- include('../partials/user-header') %>
+
+<div class="app-main">
+  <%- include('../partials/user-topbar') %>
+  
+  <div class="app-content">
+    <div class="page-header">
+      <h4>Profil Saya</h4>
+    </div>
+
+    <% if (error) { %>
+      <div class="alert alert-danger" style="margin-bottom: 1.5rem;"><%= error %></div>
+    <% } %>
+    <% if (success) { %>
+      <div class="alert alert-success" style="margin-bottom: 1.5rem;"><%= success %></div>
+    <% } %>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+      <div class="panel">
+        <h6 style="margin-bottom: 1.5rem;">Informasi Akun</h6>
+        
+        <form method="POST" action="/profil/update">
+          <div style="margin-bottom: 1.2rem;">
+            <label style="display: block; margin-bottom: .4rem; font-weight: 700; font-size: .9rem;">Nama</label>
+            <input type="text" name="name" value="<%= user.name %>" class="form-control">
+          </div>
+          
+          <div style="margin-bottom: 1.2rem;">
+            <label style="display: block; margin-bottom: .4rem; font-weight: 700; font-size: .9rem;">Email</label>
+            <input type="email" value="<%= user.email %>" class="form-control" disabled>
+          </div>
+          
+          <div style="margin-bottom: 1.2rem;">
+            <label style="display: block; margin-bottom: .4rem; font-weight: 700; font-size: .9rem;">Nomor Telepon</label>
+            <input type="tel" name="phone" value="<%= user.phone || '' %>" class="form-control" placeholder="081234567890">
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Simpan Perubahan</button>
+        </form>
+      </div>
+
+      <div class="panel">
+        <h6 style="margin-bottom: 1.5rem;">Ganti Password</h6>
+        
+        <form method="POST" action="/profil/change-password">
+          <div style="margin-bottom: 1.2rem;">
+            <label style="display: block; margin-bottom: .4rem; font-weight: 700; font-size: .9rem;">Password Saat Ini</label>
+            <input type="password" name="current_password" class="form-control" required>
+          </div>
+          
+          <div style="margin-bottom: 1.2rem;">
+            <label style="display: block; margin-bottom: .4rem; font-weight: 700; font-size: .9rem;">Password Baru</label>
+            <input type="password" name="new_password" class="form-control" required>
+          </div>
+          
+          <div style="margin-bottom: 1.2rem;">
+            <label style="display: block; margin-bottom: .4rem; font-weight: 700; font-size: .9rem;">Konfirmasi Password</label>
+            <input type="password" name="confirm_password" class="form-control" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Ganti Password</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/user-footer') %>

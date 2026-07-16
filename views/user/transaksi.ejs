@@ -1,0 +1,49 @@
+<%- include('../partials/user-header') %>
+
+<div class="app-main">
+  <%- include('../partials/user-topbar') %>
+  
+  <div class="app-content">
+    <div class="page-header">
+      <h4>Riwayat Transaksi</h4>
+    </div>
+
+    <% if (transactions && transactions.length > 0) { %>
+      <div class="panel">
+        <div style="overflow-x: auto;">
+          <table class="table" style="margin: 0;">
+            <thead>
+              <tr>
+                <th>Tipe</th>
+                <th>Jumlah</th>
+                <th>Deskripsi</th>
+                <th>Saldo Sebelum</th>
+                <th>Saldo Sesudah</th>
+                <th>Tanggal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% transactions.forEach(trans => { %>
+                <tr>
+                  <td><span class="badge-status badge-<%= trans.type %>"><%= trans.type.toUpperCase() %></span></td>
+                  <td><strong>Rp <%= trans.amount.toLocaleString('id-ID') %></strong></td>
+                  <td><%= trans.description %></td>
+                  <td><small>Rp <%= (trans.balance_before || 0).toLocaleString('id-ID') %></small></td>
+                  <td><small style="color: var(--success); font-weight: 700;">Rp <%= (trans.balance_after || 0).toLocaleString('id-ID') %></small></td>
+                  <td><small><%= new Date(trans.created_at).toLocaleDateString('id-ID') %></small></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="panel" style="text-align: center; padding: 2rem;">
+        <i class="fas fa-history" style="font-size: 2rem; color: var(--text-muted); margin-bottom: .5rem; display: block;"></i>
+        <p style="color: var(--text-muted);">Belum ada transaksi</p>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../partials/user-footer') %>

@@ -1,0 +1,77 @@
+<%- include('../partials/user-header') %>
+
+<div class="app-main">
+  <%- include('../partials/user-topbar') %>
+  
+  <div class="app-content">
+    <div class="page-header">
+      <div>
+        <h4>Pembayaran Topup</h4>
+        <p style="color: var(--text-muted); margin: 0; font-size: 0.85rem;">Scan QRIS untuk melanjutkan pembayaran</p>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+      <div class="panel">
+        <h6 style="margin-bottom: 1.5rem;">QRIS Payment</h6>
+        <div style="background: var(--bg); padding: 1.5rem; border-radius: .8rem; text-align: center;">
+          <img src="<%= qrisImagePath %>" alt="QRIS Code" style="max-width: 100%; height: auto; border-radius: .6rem;">
+        </div>
+        <p style="text-align: center; color: var(--text-muted); font-size: .85rem; margin-top: 1rem;">
+          Tunjukkan kode QRIS ini ke kasir atau scan dengan ponsel Anda
+        </p>
+      </div>
+
+      <div class="panel">
+        <h6 style="margin-bottom: 1.5rem;">Rincian Pembayaran</h6>
+        
+        <div style="background: var(--bg); padding: 1rem; border-radius: .6rem; margin-bottom: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; padding: .5rem 0; border-bottom: 1px solid var(--border);">
+            <span>Nominal Topup</span>
+            <strong>Rp <%= topup.amount.toLocaleString('id-ID') %></strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: .5rem 0;">
+            <span>Total Bayar</span>
+            <strong style="color: var(--primary); font-size: 1.1rem;">Rp <%= topup.amount.toLocaleString('id-ID') %></strong>
+          </div>
+        </div>
+
+        <form id="buktiForm" style="margin-bottom: 1.5rem;">
+          <label style="display: block; margin-bottom: .5rem; font-weight: 700; font-size: .9rem;">Catatan (opsional)</label>
+          <textarea name="notes" rows="4" placeholder="Contoh: Sudah transfer dari jam 10 pagi" class="form-control" style="font-size: .9rem; resize: none;"></textarea>
+        </form>
+
+        <button onclick="submitBukti()" class="btn btn-primary" style="width: 100%; padding: .7rem; margin-bottom: .6rem;">
+          Konfirmasi Pembayaran
+        </button>
+        <a href="/topup-history" class="btn btn-outline-primary" style="width: 100%; padding: .7rem; text-align: center; display: block;">
+          Lihat Riwayat Topup
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function submitBukti() {
+    const notes = document.querySelector('[name="notes"]').value;
+    
+    fetch('/topup/<%= topup.id %>/upload-bukti', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ notes })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        alert(data.message);
+        window.location.href = '/topup-history';
+      } else {
+        alert(data.error || 'Terjadi kesalahan');
+      }
+    })
+    .catch(err => alert('Error: ' + err.message));
+  }
+</script>
+
+<%- include('../partials/user-footer') %>

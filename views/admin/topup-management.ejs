@@ -1,0 +1,107 @@
+<%- include('../partials/admin-header') %>
+
+<div class="app-main">
+  <%- include('../partials/admin-topbar') %>
+  
+  <div class="app-content">
+    <div class="page-header">
+      <h4>Kelola Topup</h4>
+    </div>
+
+    <div class="panel" style="margin-bottom: 1.5rem;">
+      <div style="display: flex; gap: .6rem; flex-wrap: wrap;">
+        <a href="/admin/topup" class="btn <%= !statusFilter ? 'btn-primary' : 'btn-outline-primary' %>" style="font-size: .85rem; padding: .4rem .8rem;">Semua</a>
+        <a href="/admin/topup?status=Pending" class="btn <%= statusFilter === 'Pending' ? 'btn-primary' : 'btn-outline-primary' %>" style="font-size: .85rem; padding: .4rem .8rem;">Pending</a>
+        <a href="/admin/topup?status=Submitted" class="btn <%= statusFilter === 'Submitted' ? 'btn-primary' : 'btn-outline-primary' %>" style="font-size: .85rem; padding: .4rem .8rem;">Submitted</a>
+        <a href="/admin/topup?status=Approved" class="btn <%= statusFilter === 'Approved' ? 'btn-primary' : 'btn-outline-primary' %>" style="font-size: .85rem; padding: .4rem .8rem;">Approved</a>
+        <a href="/admin/topup?status=Rejected" class="btn <%= statusFilter === 'Rejected' ? 'btn-primary' : 'btn-outline-primary' %>" style="font-size: .85rem; padding: .4rem .8rem;">Rejected</a>
+      </div>
+    </div>
+
+    <% if (topupRequests && topupRequests.length > 0) { %>
+      <div class="panel">
+        <div style="overflow-x: auto;">
+          <table class="table" style="margin: 0;">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Email</th>
+                <th>Nominal</th>
+                <th>Status</th>
+                <th>Catatan</th>
+                <th>Tanggal</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% topupRequests.forEach(req => { %>
+                <tr>
+                  <td>#<%= req.id %></td>
+                  <td><strong><%= req.user_name %></strong></td>
+                  <td><small><%= req.user_email %></small></td>
+                  <td><strong style="color: var(--primary);">Rp <%= req.amount.toLocaleString('id-ID') %></strong></td>
+                  <td><span class="badge-status badge-<%= req.status.toLowerCase() %>"><%= req.status %></span></td>
+                  <td><small><%= req.notes || '-' %></small></td>
+                  <td><small><%= new Date(req.created_at).toLocaleDateString('id-ID') %></small></td>
+                  <td>
+                    <% if (req.status === 'Submitted') { %>
+                      <button onclick="approveTopup(<%= req.id %>)" class="btn btn-sm" style="background: var(--success); color: #fff; padding: .25rem .5rem; font-size: .75rem; border: none; border-radius: .4rem; cursor: pointer; margin-right: .2rem;">Approve</button>
+                      <button onclick="rejectTopup(<%= req.id %>)" class="btn btn-sm" style="background: var(--danger); color: #fff; padding: .25rem .5rem; font-size: .75rem; border: none; border-radius: .4rem; cursor: pointer;">Reject</button>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="panel" style="text-align: center; padding: 2rem;">
+        <p style="color: var(--text-muted);">Tidak ada request topup</p>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<script>
+  function approveTopup(id) {
+    const notes = prompt('Catatan admin (opsional):');
+    fetch(`/admin/topup/${id}/approve`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ admin_notes: notes || '' })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        alert(data.message);
+        location.reload();
+      } else {
+        alert(data.error);
+      }
+    });
+  }
+
+  function rejectTopup(id) {
+    const notes = prompt('Alasan penolakan:');
+    if (notes) {
+      fetch(`/admin/topup/${id}/reject`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ admin_notes: notes })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert(data.message);
+          location.reload();
+        } else {
+          alert(data.error);
+        }
+      });
+    }
+  }
+</script>
+
+<%- include('../partials/admin-footer') %>

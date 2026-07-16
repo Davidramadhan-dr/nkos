@@ -1,0 +1,62 @@
+<%- include('../partials/user-header') %>
+
+<div class="app-main">
+  <%- include('../partials/user-topbar') %>
+  
+  <div class="app-content">
+    <div class="page-header">
+      <div>
+        <h4>Riwayat Topup</h4>
+        <p style="color: var(--text-muted); margin: 0; font-size: 0.85rem;">Lihat semua request topup Anda</p>
+      </div>
+      <a href="/topup" class="btn btn-primary">Topup Sekarang</a>
+    </div>
+
+    <% if (topupRequests && topupRequests.length > 0) { %>
+      <div class="panel">
+        <div style="overflow-x: auto;">
+          <table class="table" style="margin: 0;">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nominal</th>
+                <th>Status</th>
+                <th>Tanggal</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% topupRequests.forEach(req => { %>
+                <tr>
+                  <td>#<%= req.id %></td>
+                  <td><strong>Rp <%= req.amount.toLocaleString('id-ID') %></strong></td>
+                  <td>
+                    <span class="badge-status badge-<%= req.status.toLowerCase() %>">
+                      <%= req.status %>
+                    </span>
+                  </td>
+                  <td><small><%= new Date(req.created_at).toLocaleDateString('id-ID') %></small></td>
+                  <td>
+                    <% if (req.status === 'Pending') { %>
+                      <a href="/topup/<%= req.id %>/pembayaran" class="btn btn-sm btn-primary" style="padding: .3rem .6rem; font-size: .75rem;">Lanjutkan</a>
+                    <% } else { %>
+                      <span style="font-size: .85rem; color: var(--text-muted);">-</span>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="panel" style="text-align: center; padding: 2rem;">
+        <i class="fas fa-inbox" style="font-size: 2rem; color: var(--text-muted); margin-bottom: .5rem; display: block;"></i>
+        <p style="color: var(--text-muted);">Belum ada riwayat topup</p>
+        <a href="/topup" class="btn btn-primary">Topup Sekarang</a>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../partials/user-footer') %>
