@@ -1,0 +1,32 @@
+<header class="app-topbar">
+  <button class="btn-burger" id="burgerBtn" aria-label="Toggle sidebar">
+    <i class="bi bi-list"></i>
+  </button>
+
+  <div class="topbar-search">
+    <i class="bi bi-search"></i>
+    <form action="/cari" method="GET" style="width:100%">
+      <input type="text" name="q" placeholder="Cari nomor virtual...">
+    </form>
+  </div>
+
+  <div class="topbar-right">
+    <div class="user-menu dropdown">
+      <button class="user-menu-btn" data-bs-toggle="dropdown">
+        <span class="avatar"><%= currentUser.name.charAt(0).toUpperCase() %></span>
+        <span class="user-info d-none d-md-block">
+          <strong><%= currentUser.name %></strong>
+          <small><%= currentUser.role === 'admin' ? 'Administrator' : 'Pelanggan' %></small>
+        </span>
+        <i class="bi bi-chevron-down"></i>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li><span class="dropdown-item-text text-muted small"><%= currentUser.email %></span></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="/"><i class="bi bi-shop me-2"></i>Lihat Situs</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-danger" href="/logout"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</header>

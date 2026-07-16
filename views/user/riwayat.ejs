@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<%- include('../partials/head', { title: title }) %>
+<body>
+
+  <div class="app-layout">
+    <%- include('../partials/user-sidebar', { active: active }) %>
+
+    <div class="app-main">
+      <%- include('../partials/dash-topbar') %>
+
+      <main class="app-content">
+        <div class="page-header">
+          <div>
+            <h4>Riwayat Transaksi</h4>
+            <p class="text-muted mb-0">Semua pembelian nokos yang pernah kamu lakukan</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>No. Transaksi</th>
+                  <th>Produk</th>
+                  <th>Negara</th>
+                  <th>Kategori</th>
+                  <th>Jumlah</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Tanggal</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% orders.forEach(o => { %>
+                <tr>
+                  <td>#<%= o.id.toString().padStart(6, '0') %></td>
+                  <td><%= o.nokos_name %></td>
+                  <td><%= o.country %></td>
+                  <td><%= o.category %></td>
+                  <td><%= o.quantity %></td>
+                  <td>Rp<%= o.total_price.toLocaleString('id-ID') %></td>
+                  <td><span class="badge-status badge-<%= o.status.toLowerCase() %>"><%= o.status %></span></td>
+                  <td class="text-muted small"><%= new Date(o.created_at).toLocaleDateString('id-ID') %></td>
+                </tr>
+                <% }) %>
+                <% if (orders.length === 0) { %>
+                <tr><td colspan="8" class="text-center text-muted py-4">Belum ada transaksi. <a href="/cari">Yuk belanja nokos!</a></td></tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <%- include('../partials/scripts') %>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<%- include('../partials/head', { title: title }) %>
+<body>
+
+  <div class="app-layout">
+    <%- include('../partials/admin-sidebar', { active: active }) %>
+
+    <div class="app-main">
+      <%- include('../partials/dash-topbar') %>
+
+      <main class="app-content">
+        <div class="page-header">
+          <div>
+            <h4>Transaksi & User</h4>
+            <p class="text-muted mb-0">Semua data penjualan dan pelanggan NokosKu</p>
+          </div>
+        </div>
+
+        <div class="panel mb-3">
+          <div class="panel-header">
+            <h6>Semua Transaksi</h6>
+            <form method="GET" action="/admin/transaksi" class="d-flex gap-2">
+              <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                <option value="">Semua Status</option>
+                <option value="Pending" <%= statusFilter === 'Pending' ? 'selected' : '' %>>Pending</option>
+                <option value="Success" <%= statusFilter === 'Success' ? 'selected' : '' %>>Success</option>
+                <option value="Cancel" <%= statusFilter === 'Cancel' ? 'selected' : '' %>>Cancel</option>
+              </select>
+            </form>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>Pembeli</th>
+                  <th>Produk</th>
+                  <th>Jumlah</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Tanggal</th>
+                  <th>Ubah Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% orders.forEach(o => { %>
+                <tr>
+                  <td>#<%= o.id.toString().padStart(6, '0') %></td>
+                  <td><%= o.user_name %><br><span class="text-muted small"><%= o.user_email %></span></td>
+                  <td><%= o.nokos_name %></td>
+                  <td><%= o.quantity %></td>
+                  <td>Rp<%= o.total_price.toLocaleString('id-ID') %></td>
+                  <td><span class="badge-status badge-<%= o.status.toLowerCase() %>"><%= o.status %></span></td>
+                  <td class="text-muted small"><%= new Date(o.created_at).toLocaleDateString('id-ID') %></td>
+                  <td>
+                    <form method="POST" action="/admin/transaksi/<%= o.id %>/status" class="d-flex gap-1">
+                      <select name="status" class="form-select form-select-sm">
+                        <option value="Pending" <%= o.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                        <option value="Success" <%= o.status === 'Success' ? 'selected' : '' %>>Success</option>
+                        <option value="Cancel" <%= o.status === 'Cancel' ? 'selected' : '' %>>Cancel</option>
+                      </select>
+                      <button type="submit" class="btn btn-sm btn-outline-primary"><i class="bi bi-check-lg"></i></button>
+                    </form>
+                  </td>
+                </tr>
+                <% }) %>
+                <% if (orders.length === 0) { %>
+                <tr><td colspan="8" class="text-center text-muted py-4">Tidak ada transaksi.</td></tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header"><h6>Data User</h6></div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Nama</th>
+                  <th>Email</th>
+                  <th>Status</th>
+                  <th>Total Transaksi</th>
+                  <th>Total Belanja</th>
+                  <th>Bergabung</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% users.forEach(u => { %>
+                <tr>
+                  <td><%= u.name %></td>
+                  <td><%= u.email %></td>
+                  <td>
+                    <% if (u.is_verified) { %>
+                      <span class="badge-status badge-success">Terverifikasi</span>
+                    <% } else { %>
+                      <span class="badge-status badge-pending">Belum Verifikasi</span>
+                    <% } %>
+                  </td>
+                  <td><%= u.total_orders %></td>
+                  <td>Rp<%= (u.total_spent || 0).toLocaleString('id-ID') %></td>
+                  <td class="text-muted small"><%= new Date(u.created_at).toLocaleDateString('id-ID') %></td>
+                </tr>
+                <% }) %>
+                <% if (users.length === 0) { %>
+                <tr><td colspan="6" class="text-center text-muted py-4">Belum ada user terdaftar.</td></tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <%- include('../partials/scripts') %>
+</body>
+</html>

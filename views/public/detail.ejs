@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<%- include('../partials/head', { title: title }) %>
+<body class="public-body">
+
+  <%- include('../partials/public-navbar') %>
+
+  <section class="section-block">
+    <div class="section-inner">
+      <div class="detail-layout">
+        <div class="detail-image">
+          <img src="https://picsum.photos/seed/<%= item.image_seed %>/700/460" alt="<%= item.name %>">
+        </div>
+
+        <div class="detail-info">
+          <span class="nokos-badge-category"><%= item.category %></span>
+          <h2><%= item.name %></h2>
+          <p class="nokos-meta"><i class="bi bi-geo-alt"></i> <%= item.country %> · <i class="bi bi-broadcast"></i> <%= item.provider %></p>
+
+          <div class="detail-rating">
+            <i class="bi bi-star-fill"></i> <%= item.rating %> <span class="text-muted">· Stok tersedia: <%= item.stock %></span>
+          </div>
+
+          <p class="detail-price">Rp<%= item.price.toLocaleString('id-ID') %> <span>/ nomor</span></p>
+
+          <div class="detail-format">
+            <span class="text-muted small">Format nomor</span>
+            <p><%= item.number_format %></p>
+          </div>
+
+          <p class="detail-desc"><%= item.description %></p>
+
+          <div class="detail-actions">
+            <% if (currentUser) { %>
+              <a href="/nokos/<%= item.id %>/beli" class="btn btn-primary">
+                <i class="bi bi-cart-check me-1"></i> Beli Sekarang
+              </a>
+              <form action="/favorit/<%= item.id %>/toggle" method="POST">
+                <button type="submit" class="btn btn-outline-danger">
+                  <i class="bi <%= isFavorited ? 'bi-heart-fill' : 'bi-heart' %>"></i>
+                  <%= isFavorited ? 'Tersimpan' : 'Simpan' %>
+                </button>
+              </form>
+            <% } else { %>
+              <a href="/login" class="btn btn-primary"><i class="bi bi-box-arrow-in-right me-1"></i> Login untuk Membeli</a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+      <% if (related.length > 0) { %>
+        <h4 class="section-title mt-5">Nokos Serupa</h4>
+        <div class="nokos-grid">
+          <% related.forEach(r => { %>
+            <%- include('../partials/nokos-card', { item: r }) %>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <%- include('../partials/footer') %>
+  <%- include('../partials/scripts') %>
+</body>
+</html>

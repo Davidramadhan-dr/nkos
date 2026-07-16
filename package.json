@@ -1,0 +1,21 @@
+{
+  "name": "nokos-app",
+  "version": "1.0.0",
+  "description": "NokosKu - Marketplace jual nomor virtual (nokos). Login/Register + verifikasi email + dashboard admin (Node.js + Express + SQLite bawaan Node + Nodemailer).",
+  "main": "server.js",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "bcryptjs": "^2.4.3",
+    "ejs": "^3.1.10",
+    "nodemailer": "^6.9.14",
+    "dotenv": "^16.4.5"
+  }
+}

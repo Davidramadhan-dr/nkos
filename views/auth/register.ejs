@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<%- include('../partials/head', { title: 'Daftar - NokosKu' }) %>
+<body class="auth-body">
+
+  <div class="auth-wrapper">
+    <div class="auth-visual">
+      <div class="auth-visual-content">
+        <div class="auth-logo"><i class="bi bi-sim-fill"></i> NokosKu</div>
+        <h2>Mulai pakai nomor virtual sekarang.</h2>
+        <p>Daftar gratis, verifikasi email kamu, dan langsung bisa belanja nomor virtual dari berbagai negara.</p>
+        <ul class="auth-visual-list">
+          <li><i class="bi bi-check-circle-fill"></i> Proses daftar cepat</li>
+          <li><i class="bi bi-check-circle-fill"></i> Kode verifikasi dikirim ke email</li>
+          <li><i class="bi bi-check-circle-fill"></i> Data akun tersimpan aman</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="auth-form-side">
+      <div class="auth-card">
+        <h3>Buat Akun Baru</h3>
+        <p class="auth-subtitle">Isi data di bawah untuk mendaftar. Kami akan kirim kode verifikasi ke email kamu.</p>
+
+        <% if (error) { %>
+          <div class="alert alert-danger py-2"><%= error %></div>
+        <% } %>
+
+        <form method="POST" action="/register">
+          <div class="mb-3">
+            <label class="form-label">Nama Lengkap</label>
+            <input type="text" name="name" class="form-control" placeholder="Nama kamu"
+                   value="<%= old.name || '' %>" required autofocus>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" placeholder="nama@email.com"
+                   value="<%= old.email || '' %>" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" placeholder="Minimal 6 karakter" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Konfirmasi Password</label>
+            <input type="password" name="confirm_password" class="form-control" placeholder="Ulangi password" required>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Daftar & Kirim Kode Verifikasi</button>
+        </form>
+
+        <p class="auth-footer-text">
+          Sudah punya akun? <a href="/login">Login di sini</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

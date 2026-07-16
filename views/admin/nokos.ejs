@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<%- include('../partials/head', { title: title }) %>
+<body>
+
+  <div class="app-layout">
+    <%- include('../partials/admin-sidebar', { active: active }) %>
+
+    <div class="app-main">
+      <%- include('../partials/dash-topbar') %>
+
+      <main class="app-content">
+        <div class="page-header">
+          <div>
+            <h4>Kelola Nokos</h4>
+            <p class="text-muted mb-0">Tambah, lihat, dan hapus produk nomor virtual</p>
+          </div>
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+            <i class="bi bi-plus-lg me-1"></i> Tambah Nokos
+          </button>
+        </div>
+
+        <% if (error) { %>
+          <div class="alert alert-danger"><%= error %></div>
+        <% } %>
+
+        <div class="panel">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Nama</th>
+                  <th>Negara</th>
+                  <th>Provider</th>
+                  <th>Kategori</th>
+                  <th>Harga</th>
+                  <th>Stok</th>
+                  <th class="text-end">Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% items.forEach(item => { %>
+                <tr>
+                  <td><%= item.name %></td>
+                  <td><%= item.country %></td>
+                  <td><%= item.provider %></td>
+                  <td><span class="nokos-badge-category small"><%= item.category %></span></td>
+                  <td>Rp<%= item.price.toLocaleString('id-ID') %></td>
+                  <td><%= item.stock %></td>
+                  <td class="text-end">
+                    <a href="/nokos/<%= item.id %>" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i></a>
+                    <form method="POST" action="/admin/nokos/<%= item.id %>/delete" class="d-inline" onsubmit="return confirm('Hapus nokos ini?')">
+                      <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                    </form>
+                  </td>
+                </tr>
+                <% }) %>
+                <% if (items.length === 0) { %>
+                <tr><td colspan="7" class="text-center text-muted py-4">Belum ada produk nokos.</td></tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ADD NOKOS MODAL -->
+  <div class="modal fade" id="addModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" action="/admin/nokos">
+          <div class="modal-header">
+            <h5 class="modal-title">Tambah Nokos Baru</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Nama Produk</label>
+                <input type="text" name="name" class="form-control" placeholder="Nokos Indonesia - WhatsApp" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Kategori</label>
+                <input type="text" name="category" class="form-control" placeholder="WhatsApp / Telegram / dll" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Negara</label>
+                <input type="text" name="country" class="form-control" placeholder="Indonesia" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Provider</label>
+                <input type="text" name="provider" class="form-control" placeholder="Telkomsel" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Format Nomor</label>
+                <input type="text" name="number_format" class="form-control" placeholder="+62 8xx-xxxx-xxxx">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Harga (Rp)</label>
+                <input type="number" name="price" class="form-control" min="0" required>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Stok</label>
+                <input type="number" name="stock" class="form-control" min="0" required>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Deskripsi</label>
+                <textarea name="description" class="form-control" rows="3" placeholder="Deskripsi singkat produk"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <%- include('../partials/scripts') %>
+</body>
+</html>

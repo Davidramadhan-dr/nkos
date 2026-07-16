@@ -1,0 +1,19 @@
+<div class="nokos-card">
+  <div class="nokos-card-thumb">
+    <img src="https://picsum.photos/seed/<%= item.image_seed %>/400/260" alt="<%= item.name %>" loading="lazy">
+    <span class="nokos-badge-category"><%= item.category %></span>
+  </div>
+  <div class="nokos-card-body">
+    <h6><%= item.name %></h6>
+    <p class="nokos-meta"><i class="bi bi-geo-alt"></i> <%= item.country %> · <%= item.provider %></p>
+    <p class="nokos-format"><%= item.number_format %></p>
+    <div class="nokos-card-footer">
+      <div>
+        <strong>Rp<%= item.price.toLocaleString('id-ID') %></strong>
+        <span class="text-muted small d-block">Stok: <%= item.stock %></span>
+      </div>
+      <div class="nokos-rating"><i class="bi bi-star-fill"></i> <%= item.rating %></div>
+    </div>
+    <a href="/nokos/<%= item.id %>" class="btn btn-primary btn-sm w-100 mt-2">Lihat Detail</a>
+  </div>
+</div>

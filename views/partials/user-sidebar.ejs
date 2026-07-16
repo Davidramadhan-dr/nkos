@@ -1,0 +1,34 @@
+<aside class="app-sidebar" id="appSidebar">
+  <a href="/" class="sidebar-brand">
+    <i class="bi bi-sim-fill"></i>
+    <span>NokosKu</span>
+  </a>
+
+  <nav class="sidebar-nav">
+    <p class="nav-label">Menu Saya</p>
+    <a href="/dashboard" class="nav-link <%= active === 'dashboard' ? 'active' : '' %>">
+      <i class="bi bi-grid-1x2-fill"></i> <span>Dashboard</span>
+    </a>
+    <a href="/riwayat" class="nav-link <%= active === 'riwayat' ? 'active' : '' %>">
+      <i class="bi bi-receipt"></i> <span>Riwayat Transaksi</span>
+    </a>
+    <a href="/favorit" class="nav-link <%= active === 'favorit' ? 'active' : '' %>">
+      <i class="bi bi-heart-fill"></i> <span>Favorit</span>
+    </a>
+
+    <p class="nav-label">Belanja</p>
+    <a href="/cari" class="nav-link">
+      <i class="bi bi-search"></i> <span>Cari Nokos</span>
+    </a>
+
+    <p class="nav-label">Akun</p>
+    <a href="/logout" class="nav-link text-danger">
+      <i class="bi bi-box-arrow-right"></i> <span>Logout</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-upgrade">
+    <i class="bi bi-shield-check"></i>
+    <p>Nomor virtual aman & bisa langsung dipakai verifikasi akun.</p>
+  </div>
+</aside>

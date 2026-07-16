@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<%- include('../partials/head', { title: title }) %>
+<body class="public-body">
+
+  <%- include('../partials/public-navbar') %>
+
+  <section class="section-block">
+    <div class="section-inner narrow text-center">
+      <div class="success-icon"><i class="bi bi-check-circle-fill"></i></div>
+      <h4 class="section-title">Pembelian Berhasil!</h4>
+      <p class="text-muted">Terima kasih, pesanan kamu sedang diproses. Cek status transaksi di halaman Riwayat.</p>
+
+      <div class="invoice-card text-start">
+        <div class="invoice-row">
+          <span>No. Transaksi</span>
+          <strong>#<%= order.id.toString().padStart(6, '0') %></strong>
+        </div>
+        <div class="invoice-row">
+          <span>Produk</span>
+          <strong><%= order.nokos_name %></strong>
+        </div>
+        <div class="invoice-row">
+          <span>Asal / Provider</span>
+          <strong><%= order.country %> · <%= order.provider %></strong>
+        </div>
+        <div class="invoice-row">
+          <span>Format Nomor</span>
+          <strong><%= order.number_format %></strong>
+        </div>
+        <div class="invoice-row">
+          <span>Jumlah</span>
+          <strong><%= order.quantity %></strong>
+        </div>
+        <div class="invoice-row">
+          <span>Status</span>
+          <strong><span class="badge-status badge-<%= order.status.toLowerCase() %>"><%= order.status %></span></strong>
+        </div>
+        <div class="invoice-row total">
+          <span>Total Bayar</span>
+          <strong>Rp<%= order.total_price.toLocaleString('id-ID') %></strong>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <a href="/riwayat" class="btn btn-primary">Lihat Riwayat Transaksi</a>
+        <a href="/cari" class="btn btn-outline-primary">Belanja Lagi</a>
+      </div>
+    </div>
+  </section>
+
+  <%- include('../partials/footer') %>
+  <%- include('../partials/scripts') %>
+</body>
+</html>

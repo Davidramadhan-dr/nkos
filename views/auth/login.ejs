@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<%- include('../partials/head', { title: 'Login - NokosKu' }) %>
+<body class="auth-body">
+
+  <div class="auth-wrapper">
+    <div class="auth-visual">
+      <div class="auth-visual-content">
+        <div class="auth-logo"><i class="bi bi-sim-fill"></i> NokosKu</div>
+        <h2>Nomor virtual, siap pakai dalam hitungan detik.</h2>
+        <p>Beli nomor untuk verifikasi WhatsApp, Telegram, Google, dan lainnya — cepat, aman, dan terpercaya.</p>
+        <ul class="auth-visual-list">
+          <li><i class="bi bi-check-circle-fill"></i> Ratusan pilihan nomor & negara</li>
+          <li><i class="bi bi-check-circle-fill"></i> Transaksi tercatat rapi</li>
+          <li><i class="bi bi-check-circle-fill"></i> Verifikasi email untuk keamanan akun</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="auth-form-side">
+      <div class="auth-card">
+        <h3>Masuk ke Akun</h3>
+        <p class="auth-subtitle">Selamat datang kembali! Silakan login untuk melanjutkan.</p>
+
+        <% if (error) { %>
+          <div class="alert alert-danger py-2"><%= error %></div>
+        <% } %>
+
+        <form method="POST" action="/login">
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" placeholder="nama@email.com"
+                   value="<%= old.email || '' %>" required autofocus>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+
+        <p class="auth-footer-text">
+          Belum punya akun? <a href="/register">Daftar sekarang</a>
+        </p>
+
+        <div class="demo-credentials">
+          <p class="small text-muted mb-1"><strong>Akun demo:</strong></p>
+          <p class="small text-muted mb-0">Admin: admin@nokosku.id / admin123</p>
+          <p class="small text-muted mb-0">User: budi@example.com / user123</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

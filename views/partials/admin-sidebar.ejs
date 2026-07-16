@@ -1,0 +1,32 @@
+<aside class="app-sidebar" id="appSidebar">
+  <a href="/admin" class="sidebar-brand">
+    <i class="bi bi-sim-fill"></i>
+    <span>NokosKu</span>
+  </a>
+
+  <nav class="sidebar-nav">
+    <p class="nav-label">Admin Panel</p>
+    <a href="/admin" class="nav-link <%= active === 'admin-dashboard' ? 'active' : '' %>">
+      <i class="bi bi-graph-up-arrow"></i> <span>Data Penjualan</span>
+    </a>
+    <a href="/admin/nokos" class="nav-link <%= active === 'admin-nokos' ? 'active' : '' %>">
+      <i class="bi bi-sim"></i> <span>Kelola Nokos</span>
+    </a>
+    <a href="/admin/transaksi" class="nav-link <%= active === 'admin-transaksi' ? 'active' : '' %>">
+      <i class="bi bi-receipt-cutoff"></i> <span>Transaksi & User</span>
+    </a>
+
+    <p class="nav-label">Lainnya</p>
+    <a href="/" class="nav-link">
+      <i class="bi bi-box-arrow-up-right"></i> <span>Lihat Situs</span>
+    </a>
+    <a href="/logout" class="nav-link text-danger">
+      <i class="bi bi-box-arrow-right"></i> <span>Logout</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-upgrade">
+    <i class="bi bi-shield-lock-fill"></i>
+    <p>Kamu login sebagai Admin. Semua data penjualan bisa dipantau di sini.</p>
+  </div>
+</aside>

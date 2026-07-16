@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<%- include('../partials/head', { title: title }) %>
+<body>
+
+  <div class="app-layout">
+    <%- include('../partials/user-sidebar', { active: active }) %>
+
+    <div class="app-main">
+      <%- include('../partials/dash-topbar') %>
+
+      <main class="app-content">
+        <div class="page-header">
+          <div>
+            <h4>Dashboard Saya</h4>
+            <p class="text-muted mb-0">Halo, <%= currentUser.name %> 👋</p>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-6 col-md-4">
+            <div class="stat-card">
+              <div class="stat-icon bg-primary-subtle text-primary"><i class="bi bi-receipt"></i></div>
+              <div>
+                <h5><%= stats.totalOrders %></h5>
+                <p>Total Transaksi</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="stat-card">
+              <div class="stat-icon bg-success-subtle text-success"><i class="bi bi-cash-stack"></i></div>
+              <div>
+                <h5>Rp<%= stats.totalSpent.toLocaleString('id-ID') %></h5>
+                <p>Total Belanja</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="stat-card">
+              <div class="stat-icon bg-danger-subtle text-danger"><i class="bi bi-heart-fill"></i></div>
+              <div>
+                <h5><%= stats.totalFavorites %></h5>
+                <p>Nokos Favorit</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h6>Transaksi Terbaru</h6>
+            <a href="/riwayat" class="btn btn-sm btn-outline-primary">Lihat Semua</a>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Produk</th>
+                  <th>Jumlah</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% recentOrders.forEach(o => { %>
+                <tr>
+                  <td><%= o.nokos_name %></td>
+                  <td><%= o.quantity %></td>
+                  <td>Rp<%= o.total_price.toLocaleString('id-ID') %></td>
+                  <td><span class="badge-status badge-<%= o.status.toLowerCase() %>"><%= o.status %></span></td>
+                </tr>
+                <% }) %>
+                <% if (recentOrders.length === 0) { %>
+                <tr><td colspan="4" class="text-center text-muted py-4">Belum ada transaksi. <a href="/cari">Yuk belanja nokos!</a></td></tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <%- include('../partials/scripts') %>
+</body>
+</html>

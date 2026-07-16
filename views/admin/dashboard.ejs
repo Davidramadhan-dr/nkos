@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<%- include('../partials/head', { title: title }) %>
+<body>
+
+  <div class="app-layout">
+    <%- include('../partials/admin-sidebar', { active: active }) %>
+
+    <div class="app-main">
+      <%- include('../partials/dash-topbar') %>
+
+      <main class="app-content">
+        <div class="page-header">
+          <div>
+            <h4>Data Penjualan</h4>
+            <p class="text-muted mb-0">Ringkasan performa toko NokosKu</p>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon bg-success-subtle text-success"><i class="bi bi-cash-stack"></i></div>
+              <div>
+                <h5>Rp<%= stats.totalRevenue.toLocaleString('id-ID') %></h5>
+                <p>Total Pendapatan</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon bg-primary-subtle text-primary"><i class="bi bi-receipt"></i></div>
+              <div>
+                <h5><%= stats.totalOrders %></h5>
+                <p>Total Transaksi</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon bg-warning-subtle text-warning"><i class="bi bi-sim-fill"></i></div>
+              <div>
+                <h5><%= stats.totalNokos %></h5>
+                <p>Produk Nokos</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon bg-info-subtle text-info"><i class="bi bi-people-fill"></i></div>
+              <div>
+                <h5><%= stats.totalUsers %></h5>
+                <p>Total User</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-12 col-lg-8">
+            <div class="panel h-100">
+              <div class="panel-header">
+                <h6>Grafik Penjualan (Sukses)</h6>
+              </div>
+              <canvas id="salesChart" height="110"></canvas>
+            </div>
+          </div>
+          <div class="col-12 col-lg-4">
+            <div class="panel h-100">
+              <div class="panel-header"><h6>Nokos Terlaris</h6></div>
+              <ul class="feed-list">
+                <% topNokos.forEach(t => { %>
+                  <li>
+                    <span class="feed-dot badge-success"></span>
+                    <div>
+                      <p class="mb-0"><strong><%= t.name %></strong></p>
+                      <small class="text-muted"><%= t.total_terjual %>x terjual · Rp<%= (t.revenue || 0).toLocaleString('id-ID') %></small>
+                    </div>
+                  </li>
+                <% }) %>
+                <% if (topNokos.length === 0) { %>
+                  <li class="text-muted small">Belum ada transaksi sukses.</li>
+                <% } %>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h6>Transaksi Terbaru</h6>
+            <a href="/admin/transaksi" class="btn btn-sm btn-outline-primary">Kelola Semua</a>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Pembeli</th>
+                  <th>Produk</th>
+                  <th>Jumlah</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% recentOrders.forEach(o => { %>
+                <tr>
+                  <td><%= o.user_name %><br><span class="text-muted small"><%= o.user_email %></span></td>
+                  <td><%= o.nokos_name %></td>
+                  <td><%= o.quantity %></td>
+                  <td>Rp<%= o.total_price.toLocaleString('id-ID') %></td>
+                  <td><span class="badge-status badge-<%= o.status.toLowerCase() %>"><%= o.status %></span></td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <%- include('../partials/scripts') %>
+  <script>
+    const months = <%- JSON.stringify(monthlySales.map(m => m.month)) %>;
+    const totals = <%- JSON.stringify(monthlySales.map(m => m.total)) %>;
+
+    new Chart(document.getElementById('salesChart'), {
+      type: 'line',
+      data: {
+        labels: months.length ? months : ['Belum ada data'],
+        datasets: [{
+          label: 'Pendapatan (Rp)',
+          data: totals.length ? totals : [0],
+          borderColor: '#5b6cff',
+          backgroundColor: 'rgba(91,108,255,0.12)',
+          tension: 0.4,
+          fill: true,
+          pointRadius: 3,
+        }]
+      },
+      options: {
+        plugins: { legend: { display: false } },
+        scales: { y: { ticks: { callback: v => 'Rp' + (v/1000).toFixed(0) + 'rb' } } }
+      }
+    });
+  </script>
+</body>
+</html>

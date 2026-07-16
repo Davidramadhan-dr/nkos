@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<%- include('../partials/head', { title: title }) %>
+<body class="public-body">
+
+  <%- include('../partials/public-navbar') %>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <span class="hero-eyebrow">Marketplace Nomor Virtual</span>
+        <h1>Butuh nomor untuk verifikasi akun? <span>Beli nokos di sini.</span></h1>
+        <p>NokosKu menyediakan nomor virtual dari berbagai negara & provider, siap dipakai untuk verifikasi WhatsApp, Telegram, Google, dan aplikasi lainnya.</p>
+
+        <form action="/cari" method="GET" class="hero-search">
+          <i class="bi bi-search"></i>
+          <input type="text" name="q" placeholder="Cari nomor, provider, atau negara...">
+          <button type="submit" class="btn btn-primary">Cari</button>
+        </form>
+
+        <div class="hero-stats">
+          <div><strong><%= totalNokos %>+</strong><span>Nomor Tersedia</span></div>
+          <div><strong><%= totalCountries %></strong><span>Negara</span></div>
+          <div><strong>24/7</strong><span>Aktivasi Instan</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="section-inner">
+      <h4 class="section-title">Kategori Populer</h4>
+      <div class="category-grid">
+        <% categories.forEach(c => { %>
+          <a href="/cari?category=<%= encodeURIComponent(c.category) %>" class="category-chip">
+            <i class="bi bi-tag-fill"></i>
+            <span><%= c.category %></span>
+            <small><%= c.total %> nomor</small>
+          </a>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-block bg-alt">
+    <div class="section-inner">
+      <div class="section-header-row">
+        <h4 class="section-title mb-0">Nokos Rating Tertinggi</h4>
+        <a href="/cari" class="btn btn-outline-primary btn-sm">Lihat Semua</a>
+      </div>
+      <div class="nokos-grid">
+        <% featured.forEach(item => { %>
+          <%- include('../partials/nokos-card', { item }) %>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="section-inner">
+      <h4 class="section-title text-center">Kenapa Pilih NokosKu?</h4>
+      <div class="feature-grid">
+        <div class="feature-item">
+          <i class="bi bi-lightning-charge-fill"></i>
+          <h6>Aktivasi Instan</h6>
+          <p>Nomor langsung aktif setelah pembayaran, tidak perlu menunggu lama.</p>
+        </div>
+        <div class="feature-item">
+          <i class="bi bi-globe2"></i>
+          <h6>Banyak Pilihan Negara</h6>
+          <p>Tersedia nomor dari Indonesia hingga mancanegara sesuai kebutuhan.</p>
+        </div>
+        <div class="feature-item">
+          <i class="bi bi-shield-check"></i>
+          <h6>Akun Aman</h6>
+          <p>Sistem verifikasi email memastikan setiap akun terdaftar dengan benar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%- include('../partials/footer') %>
+  <%- include('../partials/scripts') %>
+</body>
+</html>

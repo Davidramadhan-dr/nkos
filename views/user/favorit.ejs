@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<%- include('../partials/head', { title: title }) %>
+<body>
+
+  <div class="app-layout">
+    <%- include('../partials/user-sidebar', { active: active }) %>
+
+    <div class="app-main">
+      <%- include('../partials/dash-topbar') %>
+
+      <main class="app-content">
+        <div class="page-header">
+          <div>
+            <h4>Nokos Favorit</h4>
+            <p class="text-muted mb-0">Nomor virtual yang kamu simpan</p>
+          </div>
+        </div>
+
+        <div class="nokos-grid">
+          <% favorites.forEach(item => { %>
+            <%- include('../partials/nokos-card', { item }) %>
+          <% }) %>
+        </div>
+
+        <% if (favorites.length === 0) { %>
+          <div class="panel text-center py-5">
+            <i class="bi bi-heart display-5 text-muted"></i>
+            <p class="text-muted mt-2 mb-0">Belum ada nokos favorit. <a href="/cari">Cari nokos sekarang</a></p>
+          </div>
+        <% } %>
+      </main>
+    </div>
+  </div>
+
+  <%- include('../partials/scripts') %>
+</body>
+</html>

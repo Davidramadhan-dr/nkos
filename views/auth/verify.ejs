@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<%- include('../partials/head', { title: 'Verifikasi Email - NokosKu' }) %>
+<body class="auth-body">
+
+  <div class="auth-wrapper">
+    <div class="auth-visual">
+      <div class="auth-visual-content">
+        <div class="auth-logo"><i class="bi bi-sim-fill"></i> NokosKu</div>
+        <h2>Cek email kamu.</h2>
+        <p>Kami sudah kirim kode verifikasi 6 digit ke <strong><%= email %></strong>. Masukkan kodenya untuk mengaktifkan akun.</p>
+        <ul class="auth-visual-list">
+          <li><i class="bi bi-envelope-check-fill"></i> Kode berlaku 10 menit</li>
+          <li><i class="bi bi-shield-lock-fill"></i> Jangan bagikan kode ke siapa pun</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="auth-form-side">
+      <div class="auth-card">
+        <h3>Verifikasi Akun</h3>
+        <p class="auth-subtitle">Masukkan kode 6 digit yang dikirim ke email kamu.</p>
+
+        <% if (error) { %>
+          <div class="alert alert-danger py-2"><%= error %></div>
+        <% } %>
+        <% if (info) { %>
+          <div class="alert alert-success py-2"><%= info %></div>
+        <% } %>
+        <% if (previewUrl) { %>
+          <div class="alert alert-info py-2 small">
+            Mode uji coba: email tidak dikirim ke inbox asli. Lihat isi emailnya
+            <a href="<%= previewUrl %>" target="_blank" rel="noopener">di sini</a>.
+          </div>
+        <% } %>
+
+        <form method="POST" action="/verify">
+          <div class="mb-3">
+            <label class="form-label">Kode Verifikasi</label>
+            <input type="text" name="code" class="form-control otp-input" placeholder="123456"
+                   maxlength="6" pattern="[0-9]{6}" inputmode="numeric" required autofocus>
+          </div>
+          <button type="submit" class="btn btn-primary w-100 mb-2">Verifikasi</button>
+        </form>
+
+        <form method="POST" action="/verify/resend">
+          <button type="submit" class="btn btn-outline-secondary w-100">Kirim Ulang Kode</button>
+        </form>
+
+        <p class="auth-footer-text">
+          Salah alamat email? <a href="/register">Daftar ulang</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
