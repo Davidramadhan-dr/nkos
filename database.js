@@ -18,6 +18,9 @@ db.exec(`
     is_verified INTEGER NOT NULL DEFAULT 0,
     verification_code TEXT,
     verification_expires TEXT,
+    balance REAL NOT NULL DEFAULT 0,
+    phone TEXT,
+    avatar_seed TEXT,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
   );
 
@@ -43,6 +46,8 @@ db.exec(`
     quantity INTEGER NOT NULL DEFAULT 1,
     total_price REAL NOT NULL,
     status TEXT NOT NULL DEFAULT 'Pending',
+    payment_method TEXT,
+    invoice_number TEXT,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (nokos_id) REFERENCES nokos(id)
@@ -55,6 +60,64 @@ db.exec(`
     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, nokos_id)
   );
+
+  CREATE TABLE IF NOT EXISTS topup_requests (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    amount REAL NOT NULL,
+    status TEXT NOT NULL DEFAULT 'Pending',
+    payment_proof TEXT,
+    notes TEXT,
+    admin_notes TEXT,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  );
+
+  CREATE TABLE IF NOT EXISTS topup_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    amount REAL NOT NULL,
+    status TEXT NOT NULL,
+    request_id INTEGER,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (request_id) REFERENCES topup_requests(id)
+  );
+
+  CREATE TABLE IF NOT EXISTS user_transactions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    type TEXT NOT NULL,
+    amount REAL NOT NULL,
+    description TEXT,
+    balance_before REAL,
+    balance_after REAL,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  );
+
+  CREATE TABLE IF NOT EXISTS reviews (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    nokos_id INTEGER NOT NULL,
+    rating INTEGER NOT NULL,
+    comment TEXT,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (nokos_id) REFERENCES nokos(id)
+  );
+
+  CREATE TABLE IF NOT EXISTS user_notifications (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    message TEXT,
+    type TEXT,
+    is_read INTEGER DEFAULT 0,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  );
 `);
 
 /* ---------- SEED: akun admin ---------- */
@@ -62,8 +125,8 @@ const adminExists = db.prepare("SELECT id FROM users WHERE email = ?").get("admi
 if (!adminExists) {
   const hashed = bcrypt.hashSync("admin123", 10);
   db.prepare(
-    `INSERT INTO users (name, email, password, role, is_verified) VALUES (?, ?, ?, 'admin', 1)`
-  ).run("Admin NokosKu", "admin@nokosku.id", hashed);
+    `INSERT INTO users (name, email, password, role, is_verified, balance, avatar_seed) VALUES (?, ?, ?, 'admin', 1, ?, ?)`
+  ).run("Admin NokosKu", "admin@nokosku.id", hashed, 0, "admin");
 }
 
 /* ---------- SEED: 1 akun user contoh (sudah terverifikasi) ---------- */
@@ -71,8 +134,8 @@ const demoUserExists = db.prepare("SELECT id FROM users WHERE email = ?").get("b
 if (!demoUserExists) {
   const hashed = bcrypt.hashSync("user123", 10);
   db.prepare(
-    `INSERT INTO users (name, email, password, role, is_verified) VALUES (?, ?, ?, 'user', 1)`
-  ).run("Budi Santoso", "budi@example.com", hashed);
+    `INSERT INTO users (name, email, password, role, is_verified, balance, phone, avatar_seed) VALUES (?, ?, ?, 'user', 1, ?, ?, ?)`
+  ).run("Budi Santoso", "budi@example.com", hashed, 50000, "081234567890", "budi");
 }
 
 /* ---------- SEED: data nokos (nomor virtual) - dibuat banyak ---------- */
@@ -99,7 +162,6 @@ if (nokosCount === 0) {
   let idCounter = 1;
   countries.forEach((c) => {
     c.providers.forEach((provider) => {
-      // ambil 2-3 kategori acak per provider supaya variatif tapi tetap banyak
       const shuffled = [...categories].sort(() => 0.5 - Math.random());
       const picked = shuffled.slice(0, 3);
       picked.forEach((cat) => {
@@ -140,8 +202,8 @@ if (orderCount === 0) {
 
   if (demoUser && someNokos.length > 0) {
     const insert = db.prepare(`
-      INSERT INTO orders (user_id, nokos_id, quantity, total_price, status, created_at)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO orders (user_id, nokos_id, quantity, total_price, status, payment_method, invoice_number, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `);
     const statuses = ["Success", "Success", "Pending", "Cancel", "Success", "Pending"];
     db.exec("BEGIN");
@@ -149,7 +211,8 @@ if (orderCount === 0) {
       const qty = 1 + Math.floor(Math.random() * 3);
       const daysAgo = idx * 4;
       const date = new Date(Date.now() - daysAgo * 86400000).toISOString();
-      insert.run(demoUser.id, n.id, qty, n.price * qty, statuses[idx % statuses.length], date);
+      const invoiceNum = `INV-${Date.now()}-${idx}`;
+      insert.run(demoUser.id, n.id, qty, n.price * qty, statuses[idx % statuses.length], "Balance", invoiceNum, date);
     });
     db.exec("COMMIT");
   }
